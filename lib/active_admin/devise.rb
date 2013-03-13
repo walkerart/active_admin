@@ -34,13 +34,10 @@ module ActiveAdmin
       end
 
       # Redirect to the default namespace on logout
+      # see https://github.com/gregbell/active_admin/issues/1791
       def root_path
-        (Rails.configuration.action_controller[:relative_url_root] || '') +
-        if ActiveAdmin.application.default_namespace
-          "/#{ActiveAdmin.application.default_namespace}"
-        else
-          "/"
-        end
+        root_path_method = [ActiveAdmin.application.default_namespace, :root_path].join('_')
+        respond_to?(root_path_method) ? send(root_path_method) : '/'
       end
     end
 
